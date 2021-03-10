@@ -1,4 +1,17 @@
-<table class="table">
+<!--Bootstrapten aldığımız spinner'i data yüklenmesi gerçekleşmediyse göster-->
+<div *ngIf="dataLoaded==false" class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div> 
+<table *ngIf="dataLoaded==true" class="table"> <!--yükleme işlemi gerçekleştikten sonra görün-->
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Ürün Adı</th>
+      <th>Kategori</th>
+      <th>Fiyat</th>
+      <th>Stok Adedi</th>
+    </tr>
+  </thead>
   <!--classtaki table bootstrap'tan geliyot-->
   <!-- *ngFor bir directivedir: bizim ilgili html elementini manipule etmeye yarar. *ngFor:foreach döngüsü-->
   <tr *ngFor="let product of products">
@@ -6,5 +19,6 @@
     <td>{{ product.productName }}</td>
     <td>{{ product.categoryId }}</td>
     <td>{{ product.unitPrice }}</td>
+    <td>{{ product.unitsInStock }}</td>
   </tr>
 </table>
