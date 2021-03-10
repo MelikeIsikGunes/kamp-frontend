@@ -1,0 +1,10 @@
+<table class="table">
+  <!--classtaki table bootstrap'tan geliyot-->
+  <!-- *ngFor bir directivedir: bizim ilgili html elementini manipule etmeye yarar. *ngFor:foreach döngüsü-->
+  <tr *ngFor="let product of products">
+    <td>{{ product.productId }}</td>
+    <td>{{ product.productName }}</td>
+    <td>{{ product.categoryId }}</td>
+    <td>{{ product.unitPrice }}</td>
+  </tr>
+</table>
