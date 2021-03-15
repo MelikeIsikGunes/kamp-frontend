@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/models/product';
-import { ProductResponseModel } from 'src/app/models/productResponseModel';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -14,11 +14,20 @@ export class ProductComponent implements OnInit {
   
 
   //constructor: //new'lemek, instance üretmek
-  constructor(private productService:ProductService) {} //bir servisi kullanabilmek için
+  constructor(private productService:ProductService, private activatedRoute:ActivatedRoute) {} //bir servisi kullanabilmek için
+  //ActivatedRoute mevcut olan route
 
   //ProductComponent açıldığında ilk çalışan kodlar
   ngOnInit(): void {
-    this.getProducts(); //metod çağırma
+    
+    this.activatedRoute.params.subscribe(params=>{
+      if(params["categoryId"]){
+        this.getProductsByCategory(params["categoryId"]); //metod çağırma
+      }else{
+        this.getProducts();
+      }
+    })//params-parametreler
+    
   }
 
   //metod-fonksiyon
@@ -27,7 +36,13 @@ export class ProductComponent implements OnInit {
      this.productService.getProducts().subscribe(response=>{
        this.products=response.data
        this.dataLoaded=true;
-     })
-     
+     })    
   }
+
+  getProductsByCategory(categoryId:number) {
+    this.productService.getProductsByCategory(categoryId).subscribe(response=>{
+      this.products=response.data
+      this.dataLoaded=true;
+    })    
+ }
 }
