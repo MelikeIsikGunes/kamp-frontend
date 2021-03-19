@@ -1,24 +1,54 @@
 <!--Bootstrapten aldığımız spinner'i data yüklenmesi gerçekleşmediyse göster-->
-<div *ngIf="dataLoaded==false" class="spinner-border text-primary" role="status">
+<div
+  *ngIf="dataLoaded == false"
+  class="spinner-border text-primary"
+  role="status"
+>
   <span class="visually-hidden">Loading...</span>
-</div> 
-<table *ngIf="dataLoaded==true" class="table"> <!--yükleme işlemi gerçekleştikten sonra görün-->
+</div>
+
+<div class="mb-3">
+  <label for="filterText" class="form-label">Ürün Ara</label>
+  <input
+    type="text"
+    [(ngModel)]="filterText"
+    class="form-control"
+    id="filterText"
+    placeholder="Arama ifadesi giriniz"
+  />
+</div>
+<!--[(ngModel)]="filterText" component.ts'deki filterText'e karşılık geliyor. Yani yazdığımız texti ts'deki alanla eşleştir-->
+
+<!--filterText uzunluğu 2den büyükse-->
+<div *ngIf="filterText.length > 2" class="alert alert-success">
+  <!--alert-primary, alert-danger, alert-warning...-->
+  {{ filterText }} aradınız
+</div>
+
+<table *ngIf="dataLoaded == true" class="table">
+  <!--yükleme işlemi gerçekleştikten sonra görün-->
   <thead>
     <tr>
       <th>Id</th>
       <th>Ürün Adı</th>
       <th>Kategori</th>
       <th>Fiyat</th>
+      <th>Kdv'li Fiyat</th>
       <th>Stok Adedi</th>
+      <th></th>
     </tr>
   </thead>
-  <!--classtaki table bootstrap'tan geliyot-->
-  <!-- *ngFor bir directivedir: bizim ilgili html elementini manipule etmeye yarar. *ngFor:foreach döngüsü-->
-  <tr *ngFor="let product of products">
-    <td>{{ product.productId }}</td>
-    <td>{{ product.productName }}</td>
-    <td>{{ product.categoryId }}</td>
-    <td>{{ product.unitPrice }}</td>
-    <td>{{ product.unitsInStock }}</td>
-  </tr>
+  <tbody>
+    <!--class="table" bootstrap'tan geliyor-->
+    <!-- *ngFor bir directivedir: bizim ilgili html elementini manipule etmeye yarar. *ngFor:foreach döngüsü-->
+    <tr *ngFor="let product of products | filterPipe: filterText"> <!--filtreyi listenin kendisine uyguladığımız için pipe buraya ekleriz-->
+      <td>{{ product.productId }}</td>
+      <td>{{ product.productName | uppercase }}</td> <!--hazır pipe ekledik, hepsi büyük harf olsun-->
+      <td>{{ product.categoryId }}</td>
+      <td>{{ product.unitPrice | currency }}</td> <!--hazır pipe, para birimi şeklinde gösterir-->
+      <td>{{ product.unitPrice | vatAdded: 18 | currency }}</td> <!--vatAdded bizim oluşturduğumuz pipe. Parametre için iki nokta-->
+      <td>{{ product.unitsInStock }}</td>
+      <td> <button (click)="addToCart(product)" type="button" class="btn btn-success"> Sepete Ekle </button></td>
+    </tr>
+  </tbody>
 </table>
